@@ -23,10 +23,18 @@ public class FlightController : MonoBehaviour
  
     private void HandleRotation() 
     { 
-        // TODO (Task 3-C): 
-        // Pitch   
-        // Roll    
- 
+        float upDown = Input.GetAxis("Vertical");    
+        float leftRight = Input.GetAxis("Horizontal"); 
+        float spin = 0f;
+
+        
+        if (Input.GetKey(KeyCode.Q)) spin = 1f;
+        if (Input.GetKey(KeyCode.E)) spin = -1f;
+
+        
+        transform.Rotate(Vector3.right * upDown * pitchSpeed * Time.deltaTime); 
+        transform.Rotate(Vector3.up    * leftRight * yawSpeed * Time.deltaTime); 
+        transform.Rotate(Vector3.forward * spin * rollSpeed * Time.deltaTime); 
     } 
  
     private void HandleThrust() 
