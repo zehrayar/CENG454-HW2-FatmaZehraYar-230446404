@@ -14,21 +14,27 @@ public class MissileHoming : MonoBehaviour
 
     private void Update()
     {
-        if (!currentTarget)
-        {
-            return;
-        }
+       
+        if (!currentTarget) return;
 
        
-        Vector3 targetDirection = currentTarget.position - transform.position;
+        Vector3 direction = (currentTarget.position - transform.position).normalized;
 
-       
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-
-        
+     
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
        
-        transform.Translate(Vector3.forward * (speed * Time.deltaTime));
+        transform.position += transform.forward * (speed * Time.deltaTime);
+    }
+
+ 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("MISSILE HIT!");
+            Destroy(gameObject);
+        }
     }
 }

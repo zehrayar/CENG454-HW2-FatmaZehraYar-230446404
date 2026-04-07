@@ -1,21 +1,23 @@
 
 using System.Collections;
-using UnityEngine; 
- 
-public class DangerZoneController : MonoBehaviour 
-{ 
-    [SerializeField] private FlightExamManager examManager; 
-    [SerializeField] private MissileLauncher missileLauncher; 
+using UnityEngine;
+
+public class DangerZoneController : MonoBehaviour
+{
+    [SerializeField] private FlightExamManager examManager;
+    [SerializeField] private MissileLauncher missileLauncher;
     [SerializeField] private float missileDelay = 5f;
 
     private Coroutine activeCountdown;
-  
- 
-    private void OnTriggerEnter(Collider collision) 
-    { 
-        if (!collision.CompareTag("Player")) return; 
-        examManager.EnterDangerZone(); 
-        activeCountdown = StartCoroutine(MissileCountdown()); 
+    private Transform playerTransform;
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (!collision.CompareTag("Player")) return;
+
+        playerTransform = collision.transform; 
+        examManager.EnterDangerZone();
+        activeCountdown = StartCoroutine(MissileCountdown());
     }
 
     private IEnumerator MissileCountdown()
@@ -32,17 +34,19 @@ public class DangerZoneController : MonoBehaviour
                 yield break;
         }
 
-        missileLauncher.Launch(transform);
+        missileLauncher.Launch(playerTransform);
         examManager.missileActive = true;
     }
 
-    private void OnTriggerExit(Collider collision) 
-    { 
-        if (!collision.CompareTag("Player")) return;  
+    private void OnTriggerExit(Collider collision)
+    {
+        if (!collision.CompareTag("Player")) return;
+
         if (activeCountdown != null)
-            StopCoroutine(activeCountdown); 
+            StopCoroutine(activeCountdown);
+
         missileLauncher.DestroyActiveMissile();
-        examManager.ExitDangerZone(); 
-    } 
-} 
+        examManager.ExitDangerZone();
+    }
+}
  
