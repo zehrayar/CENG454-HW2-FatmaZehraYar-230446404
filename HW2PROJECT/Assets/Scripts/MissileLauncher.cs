@@ -1,23 +1,30 @@
-using UnityEngine; 
-public class MissileLauncher : MonoBehaviour 
-{ 
-    [SerializeField] private GameObject missilePrefab; 
-    [SerializeField] private Transform launchPoint; 
-    [SerializeField] private AudioSource launchAudioSource; 
- 
-    public GameObject activeMissile; 
- 
-    public GameObject Launch(Transform target) 
-    { 
+using UnityEngine;
+
+public class MissileLauncher : MonoBehaviour
+{
+    [SerializeField] private GameObject missilePrefab;
+    [SerializeField] private Transform launchPoint;
+    [SerializeField] private AudioSource launchAudioSource;
+
+    public GameObject activeMissile;
+
+    public GameObject Launch(Transform target)
+    {
         activeMissile = Instantiate(missilePrefab, launchPoint.position, launchPoint.rotation);
+        
+        MissileHoming homing = activeMissile.GetComponent<MissileHoming>();
+        if (homing != null)
+            homing.SetTarget(target);
+
         launchAudioSource?.Play();
         return activeMissile;
-    } 
- 
-    public void DestroyActiveMissile() 
-    { 
+    }
+
+    public void DestroyActiveMissile()
+    {
         if (activeMissile == null) return;
+
         Destroy(activeMissile);
         activeMissile = null;
-    } 
-} 
+    }
+}
